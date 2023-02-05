@@ -57,3 +57,40 @@ Snippet of sql and orm for bettter understanding
             difference=Max('population') - Min('population')
         ).get('difference')
     ```
+    
+#### To find the avg difference between salary and wrong salary, for example if
+
+| Name   | Mohit   | Aman   |
+| :---:  | :---:   | :---:  |
+| Salary | 1000    | 2000   |
+
+so the avg salary will be (1000+2000)/2 = 1500
+
+but suppose you want to replace the zero (if your calculator's zero button is not working ;) )
+| Name   | Mohit   | Aman   |
+| :---:  | :---:   | :---:  |
+| Salary | 1    | 2   |
+
+wrong avg will be : (1+2)/2 = 1.5
+
+then you want to find the difference between the correct avg and miscalculated avg then:
+
+- sql:
+    ```
+        SELECT CEIL(AVG(SALARY) - AVG(REPLACE(SALARY, 0, ''))) FROM EMPLOYEES;
+    ```
+
+- django:
+    ```
+        from django.db.models import Avg, F, FloatField, Func
+        from math import ceil
+
+        class Ceil(Func):
+            function = 'CEIL'
+
+        error = Employees.objects.aggregate(
+            error=Ceil(Avg('salary') - 
+                       (Avg(F('salary').replace(0, 33).cast(FloatField())))),
+        ).get('error')
+    ```
+
