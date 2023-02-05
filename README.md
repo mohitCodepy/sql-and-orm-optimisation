@@ -24,7 +24,7 @@ Snippet of sql and orm for bettter understanding
         from django.db.models import Count
 
         result = YourModel.objects.aggregate(
-            total_cities=Count('id'),
+            total_cities=Count('city'),
             distinct_cities=Count('city', distinct=True)
         )
 
