@@ -14,7 +14,7 @@ Snippet of sql and orm for bettter understanding
         from django.db.models import Count
 
         total_cities = YourModel.objects.all().count()
-        distinct_cities = YourModel.objects.values('city').annotate(city_count=Count('city')).count()
+        distinct_cities = YourModel.objects.values('city').annotate(city_count=Count('city', distinct=True)).count()
 
         difference = total_cities - distinct_cities
     ```
