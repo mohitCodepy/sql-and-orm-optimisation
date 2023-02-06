@@ -90,7 +90,7 @@ then you want to find the difference between the correct avg and miscalculated a
 
         error = Employees.objects.aggregate(
             error=Ceil(Avg('salary') - 
-                       (Avg(F('salary').replace(0, 33).cast(FloatField())))),
+                       (Avg(F('salary').replace(0, '').cast(FloatField())))),
         ).get('error')
     ```
 
