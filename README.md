@@ -94,3 +94,51 @@ then you want to find the difference between the correct avg and miscalculated a
         ).get('error')
     ```
 
+#### To find the values with some concatinated string
+
+- sql:
+    ```
+        SELECT 
+            CONCAT(Name, "(",LEFT(Occupation,1),")")
+        FROM
+            OCCUPATIONS
+        ORDER BY
+            Name;
+
+        SELECT 
+            CONCAT("There are total of ", COUNT(Occupation), " ", LOWER(Occupation), "s.")
+        FROM OCCUPATIONS
+        GROUP BY
+            Occupation
+        ORDER BY
+            COUNT(*) ASC, Occupation ASC;
+    ```
+
+- django:
+```
+        from django.db.models import Value, CharField
+        from django.db.models.functions import Concat, Substr
+
+        Occupations.objects.annotate(
+            new_name=Concat(
+                'name', 
+                Value('('), 
+                Substr('occupation', 1, 1),
+                Value(')'),
+                output_field=CharField()
+            )
+        ).values_list('new_name', flat=True).order_by('name')
+     
+        Occupations.objects.values('occupation') \
+            .annotate(count=Count('occupation')) \
+            .annotate(
+                new_occupation=Concat(
+                    Value('There are total of '), 
+                    'count', 
+                    Value(' '), 
+                    Lower('occupation'), 
+                    Value('s.'),
+                    output_field=CharField()
+                )
+            ).order_by('count', 'occupation').values_list('new_occupation', flat=True)
+```
