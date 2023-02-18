@@ -142,3 +142,70 @@ then you want to find the difference between the correct avg and miscalculated a
                 )
             ).order_by('count', 'occupation').values_list('new_occupation', flat=True)
 ```
+
+#### Add the event cancellation fees of the all users wallet amount 
+
+- sql
+```commandline
+UPDATE 
+  "testapp_userwallet" 
+SET 
+  "wallet" = (
+    "testapp_userwallet"."wallet" + (
+      SELECT 
+        U2."fee" 
+      FROM 
+        "testapp_userwallet" U0 
+        INNER JOIN "testapp_user" U1 ON (U0."user_id" = U1."id") 
+        LEFT OUTER JOIN "testapp_eventhall" U2 ON (U1."id" = U2."user_id") 
+      WHERE 
+        U0."id" = ("testapp_userwallet"."id") 
+      LIMIT 
+        1
+    )
+  ) 
+WHERE 
+  "testapp_userwallet"."id" IN (
+    SELECT 
+      V0."id" 
+    FROM 
+      "testapp_userwallet" V0 
+      INNER JOIN "testapp_user" V1 ON (V0."user_id" = V1."id") 
+      INNER JOIN "testapp_eventhall" V2 ON (V1."id" = V2."user_id") 
+    WHERE 
+      V2."event_id" = 1
+  )
+
+```
+
+- django
+```commandline
+UserWallet.objects.filter(user_event_userevent_id=1).update(
+    wallet=F("wallet")
+    + Subquery(
+        UserWallet.objects.filter(pk=OuterRef("pk")).values("userevent_user_fee")[:1]
+    )
+)
+
+```
+
+#### Get the count of events in a city according to the event type
+
+- sql
+```commandline
+SELECT 
+  COUNT("testapp_event"."event") FILTER (
+    WHERE 
+      "testapp_event"."event_type" = \ 'message.bounced\') AS "bounced", COUNT("testapp_event"."event") FILTER (WHERE "testapp_event"."event_type" = \'message.created\') AS "created", COUNT("testapp_event"."event") FILTER (WHERE "testapp_event"."event_type" = \'message.replied\') AS "replied" FROM "testapp_event"
+
+```
+
+- django
+```commandline
+events.aggregate(
+    bounced=Count("event", filter=Q(event_type="message.bounced")),
+    created=Count("event", filter=Q(event_type="message.created")),
+    replied=Count("event", filter=Q(event_type="message.replied")),
+)
+
+```
