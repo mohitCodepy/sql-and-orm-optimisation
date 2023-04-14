@@ -115,7 +115,7 @@ then you want to find the difference between the correct avg and miscalculated a
     ```
 
 - django:
-```
+    ```
         from django.db.models import Value, CharField
         from django.db.models.functions import Concat, Substr
 
@@ -141,7 +141,7 @@ then you want to find the difference between the correct avg and miscalculated a
                     output_field=CharField()
                 )
             ).order_by('count', 'occupation').values_list('new_occupation', flat=True)
-```
+    ```
 
 
 #### To count on field according to the condition
@@ -153,10 +153,10 @@ then you want to find the difference between the correct avg and miscalculated a
             COUNT(CASE WHEN gender='Female' THEN 1 END) AS female_count,
             COUNT(CASE WHEN gender='Male' THEN 1 END) AS male_count
         FROM 
-            customer;
+            CUSTOMER;
     ```
     
--django:
+- django:
     ```
         from django.db.models import F, Count, Q
 
