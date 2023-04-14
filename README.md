@@ -142,3 +142,17 @@ then you want to find the difference between the correct avg and miscalculated a
                 )
             ).order_by('count', 'occupation').values_list('new_occupation', flat=True)
 ```
+
+
+#### To count on field according to the condition
+
+- sql:
+    ```
+        SELECT 
+            COUNT(CASE WHEN gender='Female' THEN 1 END) AS female_count,
+            COUNT(CASE WHEN gender='Male' THEN 1 END) AS male_count
+        FROM 
+            customer;
+    ```
+
+
