@@ -60,14 +60,14 @@ Snippet of sql and orm for bettter understanding
     
 #### To find the avg difference between salary and wrong salary, for example if
 
-| Name   | Mohit   | Aman   |
+| Name   | Mohit   | Rohit   |
 | :---:  | :---:   | :---:  |
 | Salary | 1000    | 2000   |
 
 so the avg salary will be (1000+2000)/2 = 1500
 
 but suppose you want to replace the zero (if your calculator's zero button is not working ;) )
-| Name   | Mohit   | Aman   |
+| Name   | Mohit   | Rohit   |
 | :---:  | :---:   | :---:  |
 | Salary | 1    | 2   |
 
